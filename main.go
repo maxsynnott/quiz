@@ -1,19 +1,26 @@
 package main
 
 import (
+	"encoding/csv"
+	"strings"
+	"bufio"
+	"time"
+	"flag"
 	"fmt"
 	"os"
-	"encoding/csv"
-	"bufio"
-	"strings"
-	"time"
 )
 
 func main() {
 	// Open and read the csv file
-	questionsFile, err := os.Open("./questions.csv")
+	fileName := flag.String("csv", "./questions.csv", "path to questions csv")
+
+	flag.Parse()
+
+	questionsFile, err := os.Open(*fileName)
+
 	if err != nil {
 		fmt.Println("An error encountered ::", err)
+		os.Exit(1)
 	}
 
 	csvReader := csv.NewReader(questionsFile)
@@ -24,22 +31,20 @@ func main() {
 	consoleReader := bufio.NewReader(os.Stdin)
 	// 
 
+	var score int
 	fmt.Println("Please answer the following questions:")
 
 	// Initiate Timer
-	var score int
-
-	const seconds = 19
+	const seconds = 20
 
 	time.AfterFunc(time.Second * seconds, func() {
 		fmt.Println("Times up!")
 	  fmt.Printf("You got %d out of %d questions correct.", score, len(questions))
 		os.Exit(1)
 	})
-
+	// 
 
 	// Iterate through each question asking questions and updating score
-
 	for i := range questions {
 		question := questions[i][0]
 		answer := questions[i][1]
