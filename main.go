@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"math/rand"
 	"strings"
 	"bufio"
 	"time"
@@ -14,6 +15,7 @@ func main() {
 	// Parse flags
 	fileName := flag.String("csv", "./questions.csv", "path to questions csv")
 	seconds := flag.Int("seconds", 30, "timer length in seconds")
+	shuffle := flag.Bool("shuffle", false, "should questions be shuffled?")
 
 	flag.Parse()
 	// 
@@ -28,6 +30,16 @@ func main() {
 
 	csvReader := csv.NewReader(questionsFile)
 	questions, err := csvReader.ReadAll()
+	// 
+
+	// Shuffle the questions if flag provided
+	if *shuffle {
+		rand.Seed(time.Now().UnixNano())
+
+		rand.Shuffle(len(questions), func(i, j int) {
+			questions[i], questions[j] = questions[j], questions[i]
+		})
+	}
 	// 
 
 	// Initiialize the console input reader
