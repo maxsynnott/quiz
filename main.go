@@ -24,8 +24,7 @@ func main() {
 	questionsFile, err := os.Open(*fileName)
 
 	if err != nil {
-		fmt.Println("An error encountered ::", err)
-		os.Exit(1)
+		exit(fmt.Sprintf("An error encountered ::", err))
 	}
 
 	csvReader := csv.NewReader(questionsFile)
@@ -54,13 +53,13 @@ func main() {
 	// Initiate Timer
 	time.AfterFunc(time.Second * time.Duration(*seconds), func() {
 		fmt.Println("Times up!")
-	  fmt.Printf("You got %d out of %d questions correct.", score, len(questions))
-		os.Exit(1)
+		exit(fmt.Sprintf("You got %d out of %d questions correct.\n", score, len(questions)))
 	})
 	// 
 
 	// Iterate through each question asking questions and updating score
 	fmt.Println("Please answer the following questions:")
+
 	for i := range questions {
 		question := questions[i][0]
 		answer := questions[i][1]
@@ -76,6 +75,10 @@ func main() {
 	}
 	//
 
-	fmt.Printf("You got %d out of %d questions correct.", score, len(questions))
+	exit(fmt.Sprintf("You got %d out of %d questions correct.", score, len(questions)))
+}
+
+func exit(msg string) {
+	fmt.Println(msg + "\n")
 	os.Exit(1)
 }
