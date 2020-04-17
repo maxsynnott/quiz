@@ -6,6 +6,7 @@ import (
 	"encoding/csv"
 	"bufio"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -23,16 +24,27 @@ func main() {
 	consoleReader := bufio.NewReader(os.Stdin)
 	// 
 
-	// Iterate through each question
 	fmt.Println("Please answer the following questions:")
 
+	// Initiate Timer
 	var score int
+
+	const seconds = 19
+
+	time.AfterFunc(time.Second * seconds, func() {
+		fmt.Println("Times up!")
+	  fmt.Printf("You got %d out of %d questions correct.", score, len(questions))
+		os.Exit(1)
+	})
+
+
+	// Iterate through each question asking questions and updating score
 
 	for i := range questions {
 		question := questions[i][0]
 		answer := questions[i][1]
 
-		fmt.Printf("Question #%d: %s\n", i, question)
+		fmt.Printf("Question #%d: %s\n", i + 1, question)
 
 		text, _ := consoleReader.ReadString('\n')
 		userAnswer := strings.TrimSpace(text)
@@ -44,4 +56,5 @@ func main() {
 	//
 
 	fmt.Printf("You got %d out of %d questions correct.", score, len(questions))
+	os.Exit(1)
 }
